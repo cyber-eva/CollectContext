@@ -54,7 +54,25 @@ object CollectContext {
       sum($"impressions").as("impressions")
     )
 
-    data_agg.
+    val data_hts = data_agg.withColumn("HitTimeStamp",unix_timestamp($"date","yyy-MM-dd:HH"))
+
+    val data_result = data_hts.select(
+      $"utm_source",
+      $"utm_medium",
+      $"utm_campaign",
+      $"utm_content",
+      $"utm_term",
+      $"profile_id",
+      $"ad_id",
+      $"creative_id",
+      $"HitTimeStamp",
+      $"views",
+      $"clicks",
+      $"impressions",
+      $"sessions"
+    )
+
+    data_result.
       write.format("csv").
       option("header","true").
       mode("overwrite").
